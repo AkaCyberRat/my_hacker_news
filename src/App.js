@@ -1,17 +1,17 @@
 import { Route, Routes } from "react-router";
 import Header from "./components/header/Header";
+import MainPage from "./components/main-page/MainPage";
 
 function App() {
   return (
     <>
-      
+
       <Header />
 
-      <div className="content container-xl border border-2 rounded-2 my-2">
+
       <Routes>
-        
+        <Route path='/' element={<MainPage />} />
       </Routes>
-      </div>
     </>
   );
 }
