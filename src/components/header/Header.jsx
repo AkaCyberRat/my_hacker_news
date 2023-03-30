@@ -13,10 +13,6 @@ const Header = () => {
                     <span className="align-top text-white">Hacker News</span>
                 </Link>
 
-                <Link to='/news' className='ms-5 text-white' style={{ fontSize: 1 + 'rem', textDecoration: 'none' }}>
-                    News    
-                </Link>
-
             </div>
 
 
