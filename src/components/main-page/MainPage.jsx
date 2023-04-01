@@ -1,47 +1,40 @@
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { MainPageContext, MainPageWrapper, Status } from "./main-page-store"
+import { MainPageProvider, useMainPageStore } from "./main-page-store"
 import ContentLayout from "../content-layout/ContentLayout"
 import Story from "./story/Story"
+import Toolbar from "./toolbar/Toolbar"
 
 
+const MainPageConsumer = observer(() => {
+    const store = useMainPageStore()
 
-const MainPageNaked = observer(() => {
-    const store = useContext(MainPageContext)
 
     useEffect(() => {
-        if (store.status === Status.Unknown) {
-            store.preloadStories()
-        }
+        if (!store.isStoriesLoaded) { store.loadAllStories() }
 
-        const updateStories = () => {
-            store.preloadStories()
-        }
+        const updateStories = () => { store.loadAllStories() }
+        setInterval(updateStories, 65000)
 
-        setInterval(updateStories, 5000)
+        return () => { clearInterval(updateStories) }
+    }, [store])
 
-        return () => {
-            clearInterval(updateStories)
-        }
-    }, [])
 
-    useEffect(() => {
-
-    }, [])
-
-    // stories = [{ id: 1, title: 'SomeTitle', score: 222, by: 'Max', time: 1681111111 }]
     return (
         <ContentLayout>
-            {store.status === Status.Pending && <div>Loading</div>}
-            {store.status === Status.Fulfilled && store.stories.map((s) => (<Story key={s.id} story={s} />))}
+
+            <Toolbar {...{
+                isFetching: store.isFetching, lastUpdateTime: store.lastUpdateTime,
+                updateCallback: () => { store.loadAllStories() }
+            }} />
+
+            <div className="story-area">
+                {store.stories.map((s) => (<Story key={s.id} story={s} />))}
+            </div>
 
         </ContentLayout>
-
     )
 })
 
-const MainPage = () => { return (<MainPageWrapper> <MainPageNaked /> </MainPageWrapper>) }
-
-
-
+const MainPage = () => (<MainPageProvider><MainPageConsumer /></MainPageProvider>)
 export default MainPage
