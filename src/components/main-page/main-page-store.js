@@ -1,48 +1,47 @@
 import { makeAutoObservable } from "mobx";
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import API from "../../api/hacker-news-api";
 
-export const Status = {
-    Unknown: 'UNKNOWN',
-    Pending: 'PENDING',
-    Fulfilled: 'FULFILLED',
-    Rejected: 'REJECTED',
+export const NewsStatus = {
+    Undefined: 'UNDEFINED',
+    Loaded: 'LOADED',
 }
 
-
-const MainPageStore = makeAutoObservable({
+const mainPageStore = makeAutoObservable({
     stories: [],
-    status: Status.Unknown,
+    lastUpdateTime: null,
+    isStoriesLoaded: false,
+    isFetching: false,
 
-    setStories(stories) {
-        this.stories = stories
+    get isStoriesLoadedGetter() {
+        return this.isStoriesLoaded
     },
 
-    setStatus(status) {
-        this.status = status
-    },
-
-    async preloadStories() {
-        this.setStatus(Status.Pending)
-
-        const stories = await API.getTopStories(5);
-        console.log(stories)
-        this.setStories(stories)
-
-        this.setStatus(Status.Fulfilled)
-    },
+    setIsFetching(bool) { this.isFetching = bool },
+    setStories(stories) { this.lastUpdateTime = Date.now(); this.isStoriesLoaded = true; this.stories = stories },
 
     async loadAllStories() {
+        if (this.isFetching) return
 
+        try {
+            this.setIsFetching(true)
+
+            const stories = await API.getTopStories(100);
+            console.log(stories)
+            this.setStories(stories)
+        }
+        catch (e) { console.log(e) }
+        finally { this.setIsFetching(false) }
     }
 })
 
-export const MainPageContext = createContext(MainPageStore)
+const mainPageContext = createContext(mainPageStore)
 
-export const MainPageWrapper = ({ children }) => {
+export const useMainPageStore = () => { return (useContext(mainPageContext)) }
+export const MainPageProvider = ({ children }) => {
     return (
-        <MainPageContext.Provider value={MainPageStore}>
+        <mainPageContext.Provider value={mainPageStore}>
             {children}
-        </MainPageContext.Provider>
+        </mainPageContext.Provider>
     )
 }
