@@ -13,10 +13,6 @@ const mainPageStore = makeAutoObservable({
     isStoriesLoaded: false,
     isFetching: false,
 
-    get isStoriesLoadedGetter() {
-        return this.isStoriesLoaded
-    },
-
     setIsFetching(bool) { this.isFetching = bool },
     setStories(stories) { this.lastUpdateTime = Date.now(); this.isStoriesLoaded = true; this.stories = stories },
 
@@ -27,7 +23,7 @@ const mainPageStore = makeAutoObservable({
             this.setIsFetching(true)
 
             const stories = await API.getTopStories(100);
-            console.log(stories)
+            
             this.setStories(stories)
         }
         catch (e) { console.log(e) }

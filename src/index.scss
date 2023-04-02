@@ -1,17 +1,19 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+$my-orange: #FF6600;
+
 .btn-orange {
   --bs-btn-font-weight: 600;
   --bs-btn-color: var(--bs-white);
-  --bs-btn-bg: #{$orange};
-  --bs-btn-border-color: #{$orange};
+  --bs-btn-bg: #{$my-orange};
+  --bs-btn-border-color: #{$my-orange};
   --bs-btn-hover-color: var(--bs-white);
-  --bs-btn-hover-bg: #{shade-color($orange, 10%)};
-  --bs-btn-hover-border-color: #{shade-color($orange, 10%)};
-  --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-  --bs-btn-active-color: var(--bs-btn-hover-color);
-  --bs-btn-active-bg: #{shade-color($orange, 20%)};
-  --bs-btn-active-border-color: #{shade-color($orange, 20%)};
+  --bs-btn-hover-bg: #{shade-color($my-orange, 10%)};
+  --bs-btn-hover-border-color: #{shade-color($my-orange, 10%)};
+  --bs-btn-focus-shadow-rgb: #{$my-orange};
+  --bs-btn-active-color: #{$my-orange};
+  --bs-btn-active-bg: #{shade-color($my-orange, 20%)};
+  --bs-btn-active-border-color: #{shade-color($my-orange, 20%)};
 }
 
 
